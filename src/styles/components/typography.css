@@ -1,0 +1,54 @@
+/* Titles */
+* {
+    font-family: system-ui;
+}
+
+.title--lg {
+    font-size: 5.6rem;
+    font-weight: bold;
+    line-height: 1.05;
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    line-height: 1.77;
+}
+
+.title--sm {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.06;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+}
+
+.text--xl {
+    font-size: 1.75rem;
+    font-weight: 300;
+    line-height: 1.77;
+}
+
+.text--lg {
+    font-size: 1.1375rem;
+    font-weight: 400;
+    color: rgb(120, 120, 120);
+}
+
+.text--bold {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.77;
+}
+
+.text {
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.77;
+}
+
+.text--sm {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.77;
+}
