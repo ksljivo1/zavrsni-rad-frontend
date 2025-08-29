@@ -16,11 +16,9 @@
 }
 
 .title--sm {
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: 600;
     line-height: 1.06;
-    letter-spacing: 0.1rem;
-    text-transform: uppercase;
 }
 
 .text--xl {
@@ -42,8 +40,8 @@
 }
 
 .text {
-    font-size: 1.125rem;
-    font-weight: 400;
+    font-size: 0.9rem;
+    font-weight: 500;
     line-height: 1.77;
 }
 

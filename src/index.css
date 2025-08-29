@@ -12,25 +12,37 @@
     --primary: #f2d544;
     --black: #232020;
     --text-color: white;
-    --gray: rgba(246, 246, 246, 0.3);
+    --gray: rgb(253, 253, 253);
     --grad1: #c136c3;
     --grad2: #03abc8;
 }
 
-.header-container {
+body {
+    background: rgb(247, 247, 247);
+}
+
+.header-container, footer {
     display: flex;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     padding-block: 20px;
     background-color: var(--gray);
 }
 
+footer {
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #575757;
+}
+
 .app-header {
     height: 85px;
 }
 
-h1 {
+h1, h2 {
     background: linear-gradient(to right, var(--grad1), var(--grad2));
     background-clip: text;
     color: transparent;
+    width: fit-content;
 }
-
