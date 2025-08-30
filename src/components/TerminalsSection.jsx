@@ -3,6 +3,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { List, ListItem } from '@mui/joy';
 import React from 'react';
 import { inputRow, terminalInput, addButton } from '../styles/sxStyles.js';
+import SymbolsList from './SymbolsList.jsx';
 
 export default function TerminalsSection(props) {
   const {
@@ -33,31 +34,7 @@ export default function TerminalsSection(props) {
         </Button>
       </Box>
       {terminals.length > 0 && (
-        <List orientation="horizontal">
-          {terminals.map((terminal) => (
-            <ListItem key={terminal}>
-              <Slide
-                timeout={500}
-                direction="left"
-                in
-                mountOnEnter
-                unmountOnExit
-              >
-                <Chip
-                  key={terminal}
-                  label={terminal}
-                  color="success"
-                  variant="outlined"
-                  onDelete={() =>
-                    setTerminals(
-                      terminals.filter((symbol) => symbol !== terminal)
-                    )
-                  }
-                />
-              </Slide>
-            </ListItem>
-          )) ?? null}
-        </List>
+        <SymbolsList symbols={terminals} setSymbols={setTerminals} />
       )}
     </>
   );

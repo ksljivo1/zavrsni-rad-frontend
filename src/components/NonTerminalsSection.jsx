@@ -3,6 +3,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { List, ListItem } from '@mui/joy';
 import React from 'react';
 import { inputRow, terminalInput, addButton } from '../styles/sxStyles.js';
+import SymbolsList from './SymbolsList.jsx';
 
 export default function NonTerminalsSection(props) {
   const {
@@ -38,31 +39,7 @@ export default function NonTerminalsSection(props) {
         </Button>
       </Box>
       {nonTerminals.length > 0 && (
-        <List orientation="horizontal">
-          {nonTerminals.map((nonTerminal) => (
-            <ListItem key={nonTerminal}>
-              <Slide
-                timeout={500}
-                direction="left"
-                in
-                mountOnEnter
-                unmountOnExit
-              >
-                <Chip
-                  key={nonTerminal}
-                  label={nonTerminal}
-                  color="success"
-                  variant="outlined"
-                  onDelete={() =>
-                    setNonTerminals(
-                      nonTerminals.filter((symbol) => symbol !== nonTerminal)
-                    )
-                  }
-                />
-              </Slide>
-            </ListItem>
-          )) ?? null}
-        </List>
+        <SymbolsList symbols={nonTerminals} setSymbols={setNonTerminals} />
       )}
     </>
   );
