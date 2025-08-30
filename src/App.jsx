@@ -21,6 +21,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import TerminalsSection from './components/TerminalsSection.jsx';
 import NonTerminalsSection from './components/NonTerminalsSection.jsx';
+import StartSymbolSection from './components/StartSymbolSection.jsx';
 
 const EPS = 'ɛ';
 
@@ -222,29 +223,11 @@ export default function App() {
               submitSymbol={submitSymbol}
             />
             <Divider orientation="horizontal" />
-            <h3 className="text">Start Symbol</h3>
-            <Box sx={inputRow}>
-              <Select
-                placeholder="Select a start symbol"
-                value={startSymbol}
-                onChange={(e, newValue) => setStartSymbol(newValue)}
-                disabled={nonTerminals.length === 0}
-                indicator={<KeyboardArrowDown />}
-                sx={startSymbolInput}
-              >
-                {nonTerminals.length > 0
-                  ? nonTerminals.map((nonTerminal) => (
-                      <Option
-                        key={nonTerminal}
-                        value={nonTerminal}
-                        sx={codeFont}
-                      >
-                        {nonTerminal}
-                      </Option>
-                    ))
-                  : null}
-              </Select>
-            </Box>
+            <StartSymbolSection
+              startSymbol={startSymbol}
+              setStartSymbol={setStartSymbol}
+              nonTerminals={nonTerminals}
+            />
             <Divider orientation="horizontal" />
             <h3 className="text">Production Rules</h3>
             <Box sx={inputRow}>

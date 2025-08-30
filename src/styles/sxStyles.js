@@ -1,4 +1,6 @@
-const codeFont = {
+import { selectClasses } from '@mui/joy/Select';
+
+export const codeFont = {
   fontFamily: '"Fira Code", "Source Code Pro", "JetBrains Mono", monospace',
 };
 
@@ -32,5 +34,15 @@ export const addButton = {
   transition: 'transform 0.3s',
   '&:hover': {
     transform: 'translateY(-5px)',
+  },
+};
+
+export const startSymbolInput = {
+  ...terminalInput,
+  [`& .${selectClasses.indicator}`]: {
+    transition: '0.2s',
+    [`&.${selectClasses.expanded}`]: {
+      transform: 'rotate(-180deg)',
+    },
   },
 };
