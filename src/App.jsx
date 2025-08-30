@@ -6,7 +6,6 @@ import {
   Divider,
   OutlinedInput,
   Slide,
-  Fade,
   Snackbar,
   Zoom,
 } from '@mui/material';
@@ -15,13 +14,12 @@ import Select, { selectClasses } from '@mui/joy/Select';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import AddIcon from '@mui/icons-material/Add';
 import { List, ListItem } from '@mui/joy';
-import { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import EastIcon from '@mui/icons-material/East';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
-import React from 'react';
+import TerminalsSection from './components/TerminalsSection.jsx';
 
 const EPS = 'ɛ';
 
@@ -48,10 +46,22 @@ const columnFlex = {
   gap: '15px',
 };
 
+const nonTerminalSection = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '10px',
+};
+
 const headerRow = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+};
+
+const rightSideProductionLayout = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '5px',
 };
 
 const loadButton = {
@@ -77,6 +87,10 @@ const inputRow = {
   gap: '10px',
 };
 
+const codeFont = {
+  fontFamily: '"Fira Code", "Source Code Pro", "JetBrains Mono", monospace',
+};
+
 const terminalInput = {
   borderRadius: '5px',
   width: '100%',
@@ -85,7 +99,7 @@ const terminalInput = {
   outline: 'none',
   '& .MuiOutlinedInput-input': { padding: '6px 12px' },
   '&:focus': { border: '2px solid #0153aa', backgroundColor: '#fff' },
-  fontFamily: '"Fira Code", "Source Code Pro", "JetBrains Mono", monospace',
+  ...codeFont,
 };
 
 const addButton = {
@@ -101,6 +115,33 @@ const addButton = {
   '&:hover': {
     transform: 'translateY(-5px)',
   },
+};
+
+const startSymbolInput = {
+  ...terminalInput,
+  [`& .${selectClasses.indicator}`]: {
+    transition: '0.2s',
+    [`&.${selectClasses.expanded}`]: {
+      transform: 'rotate(-180deg)',
+    },
+  },
+};
+
+const nonTerminalInput = {
+  ...startSymbolInput,
+  width: 'fit-content',
+};
+
+const addDeleteButtonStyles = {
+  padding: 0,
+  transition: 'scale 0.3s',
+  '&:hover': { scale: 1.2 },
+};
+
+const productionLayout = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '5px',
 };
 
 export default function App() {
@@ -134,10 +175,6 @@ export default function App() {
     setOpen(symbolIncluded || emptySymbol || commonSymbols);
   }
 
-  useEffect(() => {
-    console.log('productions:', productions);
-  }, [productions]);
-
   function handleClose() {
     setOpen(false);
   }
@@ -150,63 +187,35 @@ export default function App() {
           <Box sx={columnFlex}>
             <Box sx={headerRow}>
               <h2 className="title--sm">Grammar Definition</h2>
-              <Button sx={loadButton}>Load Example</Button>
-            </Box>
-
-            <h3 className="text">Terminals</h3>
-            <Box sx={inputRow}>
-              <OutlinedInput
-                placeholder="Enter terminal (e.g., a, +, id)"
-                value={terminalValue}
-                onChange={(e) => setTerminalValue(e.target.value.trim())}
-                sx={terminalInput}
-              />
               <Button
-                sx={addButton}
-                onClick={() =>
-                  submitSymbol(
-                    terminalValue,
-                    terminals,
-                    setTerminals,
-                    nonTerminals
-                  )
-                }
+                sx={loadButton}
+                onClick={() => {
+                  setTerminals(['1', '2', '3', '4', '+']);
+                  setNonTerminals(['S', 'T']);
+                  setStartSymbol('S');
+                  setProductions({
+                    S: [['T', '+', 'T']],
+                    T: [['1'], ['2'], ['3'], ['4']],
+                  });
+                }}
               >
-                <AddIcon sx={{ fontSize: '1.1rem' }} />
+                Load Example
               </Button>
             </Box>
-            {terminals.length > 0 && (
-              <List orientation="horizontal">
-                {terminals.map((terminal) => (
-                  <ListItem key={terminal}>
-                    <Slide
-                      timeout={500}
-                      direction="left"
-                      in
-                      mountOnEnter
-                      unmountOnExit
-                    >
-                      <Chip
-                        key={terminal}
-                        label={terminal}
-                        color="success"
-                        variant="outlined"
-                        onDelete={() =>
-                          setTerminals(
-                            terminals.filter((symbol) => symbol !== terminal)
-                          )
-                        }
-                      />
-                    </Slide>
-                  </ListItem>
-                )) ?? null}
-              </List>
-            )}
+
+            <TerminalsSection
+              terminalValue={terminalValue}
+              setTerminalValue={setTerminalValue}
+              terminals={terminals}
+              nonTerminals={nonTerminals}
+              setTerminals={setTerminals}
+              submitSymbol={submitSymbol}
+            />
             <Divider orientation="horizontal" />
             <h3 className="text">Non-terminals</h3>
             <Box sx={inputRow}>
               <OutlinedInput
-                placeholder="Enter non-terminal (e.g., S, A, B)"
+                placeholder="Enter a non-terminal (e.g., S, A, B)"
                 value={nonTerminalValue}
                 onChange={(e) => setNonTerminalValue(e.target.value.trim())}
                 sx={terminalInput}
@@ -258,30 +267,19 @@ export default function App() {
             <h3 className="text">Start Symbol</h3>
             <Box sx={inputRow}>
               <Select
-                placeholder="Select start symbol"
+                placeholder="Select a start symbol"
                 value={startSymbol}
                 onChange={(e, newValue) => setStartSymbol(newValue)}
                 disabled={nonTerminals.length === 0}
                 indicator={<KeyboardArrowDown />}
-                sx={{
-                  ...terminalInput,
-                  [`& .${selectClasses.indicator}`]: {
-                    transition: '0.2s',
-                    [`&.${selectClasses.expanded}`]: {
-                      transform: 'rotate(-180deg)',
-                    },
-                  },
-                }}
+                sx={startSymbolInput}
               >
                 {nonTerminals.length > 0
                   ? nonTerminals.map((nonTerminal) => (
                       <Option
                         key={nonTerminal}
                         value={nonTerminal}
-                        sx={{
-                          fontFamily:
-                            '"Fira Code", "Source Code Pro", "JetBrains Mono", monospace',
-                        }}
+                        sx={codeFont}
                       >
                         {nonTerminal}
                       </Option>
@@ -292,7 +290,7 @@ export default function App() {
             <Divider orientation="horizontal" />
             <h3 className="text">Production Rules</h3>
             <Box sx={inputRow}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Box sx={nonTerminalSection}>
                 <Select
                   placeholder="Select a non-terminal"
                   value={leftSideProductionRule}
@@ -301,26 +299,14 @@ export default function App() {
                   }}
                   disabled={nonTerminals.length === 0}
                   indicator={<KeyboardArrowDown />}
-                  sx={{
-                    ...terminalInput,
-                    width: 'fit-content',
-                    [`& .${selectClasses.indicator}`]: {
-                      transition: '0.2s',
-                      [`&.${selectClasses.expanded}`]: {
-                        transform: 'rotate(-180deg)',
-                      },
-                    },
-                  }}
+                  sx={nonTerminalInput}
                 >
                   {nonTerminals.length > 0
                     ? nonTerminals.map((nonTerminal) => (
                         <Option
                           key={nonTerminal}
                           value={nonTerminal}
-                          sx={{
-                            fontFamily:
-                              '"Fira Code", "Source Code Pro", "JetBrains Mono", monospace',
-                          }}
+                          sx={codeFont}
                         >
                           {nonTerminal}
                         </Option>
@@ -328,7 +314,7 @@ export default function App() {
                     : null}
                 </Select>
                 <EastIcon />
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <Box sx={rightSideProductionLayout}>
                   {rightSideProductionRule.map(
                     (rightSideProductionRule1, index) => (
                       <Zoom
@@ -353,27 +339,11 @@ export default function App() {
                             ])
                           }
                           indicator={<KeyboardArrowDown />}
-                          sx={{
-                            ...terminalInput,
-                            width: 'fit-content',
-                            [`& .${selectClasses.indicator}`]: {
-                              transition: '0.2s',
-                              [`&.${selectClasses.expanded}`]: {
-                                transform: 'rotate(-180deg)',
-                              },
-                            },
-                          }}
+                          sx={nonTerminalInput}
                         >
                           {[...terminals, ...nonTerminals, EPS].map(
                             (symbol) => (
-                              <Option
-                                key={symbol}
-                                value={symbol}
-                                sx={{
-                                  fontFamily:
-                                    '"Fira Code", "Source Code Pro", "JetBrains Mono", monospace',
-                                }}
-                              >
+                              <Option key={symbol} value={symbol} sx={codeFont}>
                                 {symbol}
                               </Option>
                             )
@@ -383,7 +353,7 @@ export default function App() {
                     )
                   ) ?? null}
                   <IconButton
-                    sx={{ padding: 0 }}
+                    sx={addDeleteButtonStyles}
                     onClick={() =>
                       setRightSideProductionRule([
                         ...rightSideProductionRule,
@@ -395,7 +365,7 @@ export default function App() {
                   </IconButton>
                   {rightSideProductionRule.length > 1 && (
                     <IconButton
-                      sx={{ padding: 0 }}
+                      sx={addDeleteButtonStyles}
                       onClick={() =>
                         setRightSideProductionRule(
                           rightSideProductionRule.slice(
@@ -410,25 +380,30 @@ export default function App() {
                   )}
                 </Box>
               </Box>
-              {leftSideProductionRule !== null &&
-                leftSideProductionRule !== '' && (
-                  <Button
-                    sx={addButton}
-                    onClick={() => {
-                      setProductions({
-                        ...productions,
-                        [leftSideProductionRule]: [
-                          ...(productions[[leftSideProductionRule]] ?? []),
-                          rightSideProductionRule,
-                        ],
-                      });
-                      setLeftSideProductionRule('');
-                      setRightSideProductionRule([EPS]);
-                    }}
-                  >
-                    <AddIcon sx={{ fontSize: '1.1rem' }} />
-                  </Button>
-                )}
+              {leftSideProductionRule && (
+                <Button
+                  sx={addButton}
+                  onClick={() => {
+                    setProductions({
+                      ...productions,
+                      [leftSideProductionRule]: [
+                        ...(productions[[leftSideProductionRule]] ?? []),
+                        rightSideProductionRule.filter(
+                          (symbol) => symbol !== EPS
+                        ).length > 0
+                          ? rightSideProductionRule.filter(
+                              (symbol) => symbol !== EPS
+                            )
+                          : [EPS],
+                      ],
+                    });
+                    setLeftSideProductionRule('');
+                    setRightSideProductionRule([EPS]);
+                  }}
+                >
+                  <AddIcon sx={{ fontSize: '1.1rem' }} />
+                </Button>
+              )}
             </Box>
             {Object.keys(productions).length > 0 && (
               <List marker="disc">
@@ -441,13 +416,7 @@ export default function App() {
                       mountOnEnter
                       unmountOnExit
                     >
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '5px',
-                        }}
-                      >
+                      <Box sx={productionLayout}>
                         <span
                           style={{
                             color:
@@ -465,6 +434,28 @@ export default function App() {
                             )}
                           </React.Fragment>
                         ))}
+                        {productions[nonTerminal].length > 0 && (
+                          <IconButton
+                            sx={addDeleteButtonStyles}
+                            onClick={() => {
+                              if (productions[nonTerminal].length === 1) {
+                                const { [nonTerminal]: extracted, ...rest } =
+                                  productions;
+                                setProductions(rest);
+                              } else {
+                                setProductions({
+                                  ...productions,
+                                  [nonTerminal]: productions[nonTerminal].slice(
+                                    0,
+                                    productions[nonTerminal].length - 1
+                                  ),
+                                });
+                              }
+                            }}
+                          >
+                            <DeleteIcon color="error" />
+                          </IconButton>
+                        )}
                       </Box>
                     </Slide>
                   </ListItem>
@@ -494,6 +485,12 @@ export default function App() {
         onClose={handleClose}
         autoHideDuration={4000}
         message={snackbarMessage}
+        ContentProps={{
+          sx: {
+            justifyContent: 'center',
+            textAlign: 'center',
+          },
+        }}
       />
     </>
   );

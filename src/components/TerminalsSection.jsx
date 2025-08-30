@@ -1,0 +1,64 @@
+import { Box, Button, Chip, OutlinedInput, Slide } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { List, ListItem } from '@mui/joy';
+import React from 'react';
+import { inputRow, terminalInput, addButton } from '../styles/sxStyles.js';
+
+export default function TerminalsSection(props) {
+  const {
+    terminalValue,
+    setTerminalValue,
+    terminals,
+    nonTerminals,
+    setTerminals,
+    submitSymbol,
+  } = props;
+  return (
+    <>
+      <h3 className="text">Terminals</h3>
+      <Box sx={inputRow}>
+        <OutlinedInput
+          placeholder="Enter a terminal (e.g., a, +, id)"
+          value={terminalValue}
+          onChange={(e) => setTerminalValue(e.target.value.trim())}
+          sx={terminalInput}
+        />
+        <Button
+          sx={addButton}
+          onClick={() =>
+            submitSymbol(terminalValue, terminals, setTerminals, nonTerminals)
+          }
+        >
+          <AddIcon sx={{ fontSize: '1.1rem' }} />
+        </Button>
+      </Box>
+      {terminals.length > 0 && (
+        <List orientation="horizontal">
+          {terminals.map((terminal) => (
+            <ListItem key={terminal}>
+              <Slide
+                timeout={500}
+                direction="left"
+                in
+                mountOnEnter
+                unmountOnExit
+              >
+                <Chip
+                  key={terminal}
+                  label={terminal}
+                  color="success"
+                  variant="outlined"
+                  onDelete={() =>
+                    setTerminals(
+                      terminals.filter((symbol) => symbol !== terminal)
+                    )
+                  }
+                />
+              </Slide>
+            </ListItem>
+          )) ?? null}
+        </List>
+      )}
+    </>
+  );
+}
