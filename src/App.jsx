@@ -20,6 +20,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import TerminalsSection from './components/TerminalsSection.jsx';
+import NonTerminalsSection from './components/NonTerminalsSection.jsx';
 
 const EPS = 'ɛ';
 
@@ -212,57 +213,14 @@ export default function App() {
               submitSymbol={submitSymbol}
             />
             <Divider orientation="horizontal" />
-            <h3 className="text">Non-terminals</h3>
-            <Box sx={inputRow}>
-              <OutlinedInput
-                placeholder="Enter a non-terminal (e.g., S, A, B)"
-                value={nonTerminalValue}
-                onChange={(e) => setNonTerminalValue(e.target.value.trim())}
-                sx={terminalInput}
-              />
-              <Button
-                onClick={() =>
-                  submitSymbol(
-                    nonTerminalValue,
-                    nonTerminals,
-                    setNonTerminals,
-                    terminals
-                  )
-                }
-                sx={addButton}
-              >
-                <AddIcon sx={{ fontSize: '1.1rem' }} />
-              </Button>
-            </Box>
-            {nonTerminals.length > 0 && (
-              <List orientation="horizontal">
-                {nonTerminals.map((nonTerminal) => (
-                  <ListItem key={nonTerminal}>
-                    <Slide
-                      timeout={500}
-                      direction="left"
-                      in
-                      mountOnEnter
-                      unmountOnExit
-                    >
-                      <Chip
-                        key={nonTerminal}
-                        label={nonTerminal}
-                        color="success"
-                        variant="outlined"
-                        onDelete={() =>
-                          setNonTerminals(
-                            nonTerminals.filter(
-                              (symbol) => symbol !== nonTerminal
-                            )
-                          )
-                        }
-                      />
-                    </Slide>
-                  </ListItem>
-                )) ?? null}
-              </List>
-            )}
+            <NonTerminalsSection
+              nonTerminalValue={nonTerminalValue}
+              setNonTerminalValue={setNonTerminalValue}
+              terminals={terminals}
+              nonTerminals={nonTerminals}
+              setNonTerminals={setNonTerminals}
+              submitSymbol={submitSymbol}
+            />
             <Divider orientation="horizontal" />
             <h3 className="text">Start Symbol</h3>
             <Box sx={inputRow}>
@@ -439,7 +397,7 @@ export default function App() {
                             sx={addDeleteButtonStyles}
                             onClick={() => {
                               if (productions[nonTerminal].length === 1) {
-                                const { [nonTerminal]: extracted, ...rest } =
+                                const { [nonTerminal]: _, ...rest } =
                                   productions;
                                 setProductions(rest);
                               } else {
