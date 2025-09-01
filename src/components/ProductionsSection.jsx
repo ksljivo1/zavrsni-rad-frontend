@@ -18,6 +18,7 @@ import {
   rightSideProductionLayout,
   nonTerminalSection,
   addDeleteButtonStyles,
+  productionsStyles,
 } from '../styles/sxStyles.js';
 
 export default function ProductionsSection(props) {
@@ -106,7 +107,6 @@ export default function ProductionsSection(props) {
             {rightSideProductionRule.map((rightSideProductionRule1, index) => (
               <Zoom key={index} timeout={800} in mountOnEnter unmountOnExit>
                 <Select
-                  placeholder="Select start symbol"
                   value={
                     rightSideProductionRule1 === ''
                       ? EPS
@@ -164,23 +164,35 @@ export default function ProductionsSection(props) {
                 mountOnEnter
                 unmountOnExit
               >
-                <Box sx={productionLayout}>
-                  <span
-                    style={{
-                      color: nonTerminal === startSymbol ? 'green' : 'black',
-                    }}
-                  >
-                    {nonTerminal}
-                  </span>
-                  <EastIcon sx={{ scale: 0.8 }} />
-                  {productions[nonTerminal].map((prod, idx) => (
-                    <React.Fragment key={idx}>
-                      <span>{prod.join('')}</span>
-                      {idx < productions[nonTerminal].length - 1 && (
-                        <span style={{ marginInline: '0.5rem' }}>|</span>
-                      )}
-                    </React.Fragment>
-                  ))}
+                <Box sx={productionsStyles}>
+                  <Box sx={productionLayout}>
+                    <span
+                      style={{
+                        color: nonTerminal === startSymbol ? 'green' : 'black',
+                      }}
+                    >
+                      {nonTerminal}
+                    </span>
+                    <EastIcon sx={{ scale: 0.8 }} />
+                    {productions[nonTerminal].map((prod, idx) => (
+                      <React.Fragment key={idx}>
+                        <span
+                          style={{
+                            color: 'black',
+                          }}
+                        >
+                          {prod.join('')}
+                        </span>
+                        {idx < productions[nonTerminal].length - 1 && (
+                          <span
+                            style={{ marginInline: '0.5rem', color: 'black' }}
+                          >
+                            |
+                          </span>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </Box>
                   {productions[nonTerminal].length > 0 && (
                     <IconButton
                       sx={addDeleteButtonStyles}

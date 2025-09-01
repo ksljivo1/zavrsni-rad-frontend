@@ -41,12 +41,17 @@ export default function GrammarDefinition(props) {
             <Button
               sx={loadButton}
               onClick={() => {
-                setTerminals(['1', '2', '3', '4', '+']);
-                setNonTerminals(['S', 'T']);
+                setTerminals(['a', 'b']);
+                setNonTerminals(['S', 'A', 'B', 'C']);
                 setStartSymbol('S');
                 setProductions({
-                  S: [['T', '+', 'T']],
-                  T: [['1'], ['2'], ['3'], ['4']],
+                  S: [
+                    ['A', 'B'],
+                    ['B', 'C'],
+                  ],
+                  A: [['B', 'A'], ['a']],
+                  B: [['C', 'C'], ['b']],
+                  C: [['A', 'B'], ['a']],
                 });
               }}
             >

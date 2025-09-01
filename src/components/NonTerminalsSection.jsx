@@ -1,6 +1,5 @@
-import { Box, Button, Chip, OutlinedInput, Slide } from '@mui/material';
+import { Box, Button, OutlinedInput } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { List, ListItem } from '@mui/joy';
 import React from 'react';
 import { inputRow, terminalInput, addButton } from '../styles/sxStyles.js';
 import SymbolsList from './SymbolsList.jsx';

@@ -3,6 +3,7 @@ import { Box, Snackbar } from '@mui/material';
 import React, { useState } from 'react';
 import GrammarDefinition from './components/GrammarDefinition.jsx';
 import { cardBox, gridLayout } from './styles/sxStyles.js';
+import WordParser from './components/WordParser.jsx';
 
 const EPS = 'ɛ';
 
@@ -15,9 +16,14 @@ export default function App() {
   const [leftSideProductionRule, setLeftSideProductionRule] = useState('');
   const [rightSideProductionRule, setRightSideProductionRule] = useState([EPS]);
   const [productions, setProductions] = useState({});
+  const [word, setWord] = useState(['']);
+  const [parseTrees, setParseTrees] = useState([]); // store multiple derivations
+  const [wordNotGeneratedMessage, setWordNotGeneratedMessage] = useState(null);
+  const [parseTreesLoading, setParseTreesLoading] = useState(false);
 
   const [open, setOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [tabIndex, setTabIndex] = useState(0); // active tab index
 
   function submitSymbol(newSymbol, symbols, setSymbols, otherSymbols) {
     const symbolIncluded = symbols.includes(newSymbol);
@@ -64,14 +70,29 @@ export default function App() {
           nonTerminalValue={nonTerminalValue}
           setNonTerminalValue={setNonTerminalValue}
         />
+
         <Box sx={cardBox}>
           <h2 className="title--sm">Parse Tree Visualizer</h2>
         </Box>
 
-        <Box sx={cardBox}>
-          <h2 className="title--sm">Word Parser</h2>
-        </Box>
+        <WordParser
+          word={word}
+          setWord={setWord}
+          nonTerminals={nonTerminals}
+          parseTrees={parseTrees}
+          parseTreesLoading={parseTreesLoading}
+          setParseTrees={setParseTrees}
+          setParseTreesLoading={setParseTreesLoading}
+          terminals={terminals}
+          productions={productions}
+          setWordNotGeneratedMessage={setWordNotGeneratedMessage}
+          wordNotGeneratedMessage={wordNotGeneratedMessage}
+          setTabIndex={setTabIndex}
+          tabIndex={tabIndex}
+          startSymbol={startSymbol}
+        />
       </Box>
+
       <footer>
         Context-Free Grammar Simulator • Built with React • © 2025 Kerim Šljivo
       </footer>

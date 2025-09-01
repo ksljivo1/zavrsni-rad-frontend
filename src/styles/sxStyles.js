@@ -120,3 +120,8 @@ export const gridLayout = {
     gridTemplateColumns: '1fr',
   },
 };
+
+export const productionsStyles = {
+  display: 'flex',
+  justifyContent: 'space-between',
+};
